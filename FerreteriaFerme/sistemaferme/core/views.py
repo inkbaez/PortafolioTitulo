@@ -92,28 +92,7 @@ def mostrar_datos_cuenta(request):
 
     return render(request, 'core/Datos_cuenta.html', data)
 
-def actualizar_datos_cuenta(request):
-    
-    nombres = request.POST['nombre']
-    ape = request.POST['apellido']
-    fecha = change_date_format(request.POST['nacimiento'])
-    fono = request.POST['fono']
-    email = request.POST['email']
 
-    try:
-        User.objects.filter(username=request.user.username).update(email=email)
-        
-        user = Usuario.objects.filter(username=request.user.username).first()
-
-        id_user = user.id_usuario
-        print(id_user)
-        
-        Cliente.objects.filter(id_usuario=user).update(nombres=nombres, apellidos=ape, nacimiento=fecha, fono=fono, email=email)
-
-        messages.success(request, "Actualizado Correctamente")
-    except:
-        messages.error(request, "No se ha podido Actualizar los datos")
-    return redirect('micuenta')
 
     
 
