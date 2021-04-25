@@ -1,0 +1,58 @@
+{% extends 'core/Base.html' %}
+
+{% load static %}
+
+{% block titulo %}
+  <title>Login</title>  
+{% endblock %}
+
+{% block javascript %}
+
+    {% if messages %}
+        {% for m in messages %}
+            <script>
+                Swal.fire({
+                  position: 'top-end',
+                  icon: 'success',
+                  title: "{{m}}",
+                  html: 'Favor Inicie sesión '+'<i class="far fa-laugh-wink"></i>',
+                  showConfirmButton: false,
+                  timer: 1500
+                })
+            </script>
+        {% endfor %}
+    {% endif %}
+
+    {% if form.errors %}
+      <script>
+          Swal.fire({
+              "title": "Error",
+              "text": "Las Credenciales son invalidas",
+              "icon":"error"
+          })
+      </script>
+    {% endif %}
+    
+{% endblock %}
+
+{% block Contenido %}
+
+  <div class="container text-center p-4" style="max-width: 500px;">
+    <form class="form-signin" method="POST" action=" {% url 'login' %} ">
+      {% csrf_token %}
+      <img class="mb-4 img-fluid" src="{% static 'core/img/logo-negro.png' %}" alt="" width="200" height="auto">
+      <h1 class="h3 mb-3 font-weight-normal">Ingrese sus Credenciales</h1>
+      <label>Username</label>
+      <input name="username" type="text" id="inputEmail" class="form-control" placeholder="" required autofocus="">
+      <label>Password</label>
+      <input name="password" type="password" id="inputPassword" class="form-control" placeholder="" required>
+      <div class="checkbox mb-3">
+      </div>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Iniciar Sesión</button>
+      <hr>
+      <a href="{% url 'registro' %}" class="btn btn-lg btn-info btn-block text-white" type="button" >Registrarse</a>
+    </form>
+  </div>
+
+
+{% endblock %}
