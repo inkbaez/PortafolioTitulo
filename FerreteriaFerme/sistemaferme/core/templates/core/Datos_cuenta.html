@@ -15,11 +15,23 @@
             document.getElementById('APE').value = 'Empresa, Campo no requerido.'
 
         }
-        else{
+        else {
             document.getElementById('divApellido').hidden = false
         }
     });
 </script>
+
+<script>
+    document.getElementById('guardar').addEventListener('click', function () {
+        document.getElementById('NOM').disabled = false;
+        document.getElementById('APE').disabled = false;
+        document.getElementById('NAC').disabled = false;
+        document.getElementById('CEL').disabled = false;
+        document.getElementById('EMA').disabled = false;
+    });
+
+</script>
+
 {% endblock %}
 
 
@@ -32,12 +44,12 @@
 </div>
 
 <div class="container p-4">
-    <form action="" method="POST">
+    <form action="{% url 'actualizar-datos' %}" method="POST">
         {% csrf_token %}
         <div class="form-group">
             <label>Rut:</label>
             <div class="d-flex">
-                <input type="text" name="rut_cliente" id="" class="form-control" value="{{ cliente.rut_cli }}" disabled>
+                <input type="text" name="rut_cliente" id="" class="form-control" value="{{ cliente.rut_cli }}" disabled required>
             </div>
         </div>
         <div class="form-group">
@@ -90,7 +102,7 @@
                 {% endif %}
             </select>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Guardar Mis Cambios</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" id="guardar">Guardar Mis Cambios</button>
     </form>
 </div>
 
