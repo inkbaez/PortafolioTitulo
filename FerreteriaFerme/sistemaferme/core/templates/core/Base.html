@@ -23,7 +23,7 @@
   <!--INICIO BARRA DE NAVEGACION-->
   <!--INICIO BARRA DE NAVEGACION-->
   <!--INICIO BARRA DE NAVEGACION-->
-  <nav class="navbar navbar-expand-lg navbar-light bg-info">
+  <nav class="navbar navbar-expand-lg navbar-light bg-dark">
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03"
       aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -41,40 +41,31 @@
         </span>
       </form>
       <div class="navbar-nav text-lg-center">
+        <a class="nav-item nav-link text-white pt-3" href="{% url 'listado-producto' %}">Productos</a>
         {%  if request.user.is_authenticated  %}
         {% ifequal user.groups.all.0.name "ClienteGrupo" %}
         <a class="nav-item nav-link text-white" href="{% url 'micuenta' %}">Mi Cuenta</a>
+        {% endifequal %}
+        {% ifequal user.groups.all.0.name "SuperUsuarioGrupo" %}
+        <a class="nav-item nav-link text-white" href="{% url 'nuevo-usuario' %}">Crear Usuario</a>
+        {% endifequal %}
+        {% ifequal user.groups.all.0.name "EmpleadoGrupo" %}
+        <a class="nav-item nav-link text-white" href="{% url 'nuevo-producto' %}">Crear Producto</a>
         {% endifequal %}
         <a class="nav-item nav-link text-white" href="{% url 'logout' %}">Cerrar Sesion</a>
         {% else %}
         <a class="nav-item nav-link text-white" href="{% url 'login' %}">Iniciar Sesión</a>
         {%  endif  %}
         <a class="nav-item nav-link text-white pt-3" href="#"><i class="fas fa-2x fa-shopping-cart"></i></a>
+        
       </div>
-
-
-      <!-- <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
-        <li class="nav-item">
-          <a class="nav-link" href="#">Mi Cuenta</a>
-            <a class="nav-link p-2 d-flex" href="#">
-              <i class="fas fa-shopping-cart text-light"></i>
-            <div class="text-center mt-2 text-light">
-              <p>Carrito</p>
-            </div> 
-
-          
-        </li>
-        <li class="nav-item">
-          <div class="d-flex">
-            <a class="nav-link p-2" href="{% url 'login' %}"><i class="fas fa-user-circle text-light"></i></a>
-            <div class="text-center mt-2 text-light d-lg-none">
-              <p>Cuenta</p>
-            </div>
-          </div>
-        </li>
-      </ul> -->
     </div>
   </nav>
+  {%  if request.user.is_authenticated  %}
+  <div class="p-0 d-flex flex-row-reverse" style="background-color: #121314;">
+    <small class="nav-item nav-link text-white pt-0 pb-0" >Bienvenido: {{user.username}}</small>
+  </div>
+  {%  endif  %}
   <!--FIN BARRA DE NAVEGACION-->
   <!--FIN BARRA DE NAVEGACION-->
   <!--FIN BARRA DE NAVEGACION-->
@@ -89,7 +80,7 @@
   <!--FOOTER-->
   <!--FOOTER-->
   <!--FOOTER-->
-  <footer class="bg-info text-white text-center text-lg-start">
+  <footer class="bg-dark text-white text-center text-lg-start ">
     <!-- Grid container -->
     <div class="container p-4">
       <!--Grid row-->
@@ -157,9 +148,12 @@
   <!--FIN FOOTER-->
   <!--FIN FOOTER-->
   <!--FIN FOOTER-->
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+
+ <!--  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
     integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-    crossorigin="anonymous"></script>
+    crossorigin="anonymous"></script> -->
+    
+  <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
     integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
     crossorigin="anonymous"></script>
@@ -175,7 +169,7 @@
     Swal.fire({
       "title": "AVISO",
       "text": "{{m}}",
-      "icon": "success"
+      "icon": "{{m.tags}}"
     })
   </script>
   {% endfor %}
