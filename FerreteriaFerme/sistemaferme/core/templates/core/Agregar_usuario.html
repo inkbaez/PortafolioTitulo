@@ -1,0 +1,264 @@
+{% extends 'core/Base.html' %}
+
+{% load static %}
+
+{% block javascript %}
+
+<script>
+    document.getElementById('tipousuario').addEventListener('change', function () {
+        var select = document.getElementById("tipousuario");
+        var options = document.getElementsByTagName("option");
+        if (select.value == 1) {
+            document.getElementById('formulario-empleado').hidden = false
+            document.getElementById('formulario-proveedor').hidden = true
+
+        } else if (select.value == 2) {
+            document.getElementById('formulario-empleado').hidden = true
+            document.getElementById('formulario-proveedor').hidden = false
+        }
+
+    });
+</script>
+
+<script type="text/javascript">
+    var $ = jQuery.noConflict();
+    function abrirModalEdicion(url){
+        $('#edicion').load(url, function (){
+            $(this).modal('show');
+        });
+    }
+
+
+</script>
+
+<script>
+    function eliminarEmpleado(id){
+    Swal.fire({
+    title: '¿Estas Seguro?',
+    text: "¿Eliminar Usuario?",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#343a40',
+    cancelButtonColor: '#dc3545',
+    confirmButtonText: 'Si',
+    cancelButtonText: 'No'
+    }).then((result) => {
+    if (result.isConfirmed) {
+        window.location.href = '/eliminar_empleado/'+id+'/'
+    }
+    })
+    }
+</script>
+
+<script>
+    function eliminarProveedor(id){
+    Swal.fire({
+    title: '¿Estas Seguro?',
+    text: "¿Eliminar Usuario?",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#343a40',
+    cancelButtonColor: '#dc3545',
+    confirmButtonText: 'Si',
+    cancelButtonText: 'No'
+    }).then((result) => {
+    if (result.isConfirmed) {
+        window.location.href = '/eliminar_proveedor/'+id+'/'
+    }
+    })
+    }
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+{% block Contenido %}
+
+<div class="container p-4">
+    <div class="navbar-brand bg-light d-flex">
+        <div class="pl-4">Nuevo Usuario:</div>
+        <div class="ml-auto"><i class="fas fa-2x fa-pen-square text-dark" style="opacity: 0.5;"></i></div>
+    </div>
+    <!---->
+
+    <div class="row justify-content-center align-items-center h-100">
+        <div class="form-group">
+            <label>Seleccione el tipo de usuario a registrar: </label>
+            <select name="tipousuario" id="tipousuario" class="form-control">
+                <option value="0" selected disabled>.-Seleccione.-</option>
+                <option value="1">.-Empleado-.</option>
+                <option value="2">.-Proveedor-.</option>
+            </select>
+        </div>
+    </div>
+    <hr>
+    <!---->
+
+    <div class="container p-4" id="formulario-empleado" hidden>
+        <h2 class="pb-3">Formulario Empleado</h2>
+        <form action="{% url 'nuevo-empleado' %}" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Rut Empleado:</label>
+                <input type="text" name="rut_emp" id="" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Nombres:</label>
+                <input type="text" name="nombres_emp" id="" class="form-control" required>
+            </div>
+            <div class="form-group" id="">
+                <label>Apellidos:</label>
+                <input type="text" name="apellidos_emp" id="" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Nombre de Usuario:</label>
+                <input type="text" name="username_emp" id="" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Contraseña:</label>
+                <input type="password" name="password_emp" id="" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Confirme Contraseña:</label>
+                <input type="password" name="password2_emp" id="" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="mail" name="mail_emp" id="" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Cargo:</label>
+                <select name="cargo_emp" id="" class="form-control">
+                    {% for c in cargo %}
+                    <option value="{{c.id_cargo}}">{{c.descripcion}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button class="btn btn-lg btn-dark btn-block" type="submit" id="guardar">Registrar</button>
+        </form>
+        <hr>
+    </div>
+
+
+    <div class="container p-4" id="formulario-proveedor" hidden>
+        <h2 class="pb-3">Formulario Proveedor</h2>
+        <form action="{% url 'nuevo-proveedor' %}" method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label>Rut Proveedor:</label>
+                <input type="text" name="rut_pro" id="" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Nombre Entidad:</label>
+                <input type="text" name="nombre_pro" id="" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Nombre de Usuario:</label>
+                <input type="text" name="username_pro" id="" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Contraseña:</label>
+                <input type="password" name="password_pro" id="" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Confirme Contraseña:</label>
+                <input type="password" name="password2_pro" id="" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Celular:</label>
+                <input type="number" name="fono_pro" id="" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Email:</label>
+                <input type="mail" name="mail_pro" id="" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>Rubro:</label>
+                <select name="rubro_pro" id="" class="form-control">
+                    {% for r in rubro %}
+                    <option value="{{r.id_rubro}}">{{r.descripcion}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button class="btn btn-lg btn-dark btn-block" type="submit" id="guardar">Registrar</button>
+        </form>
+        <hr>
+    </div>
+
+</div>
+
+<div class="container pt-4">
+    <h2 class="pb-3">Listado de Empleados</h2>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">ID</th>
+                <th scope="col">RUT</th>
+                <th scope="col">NOMBRES</th>
+                <th scope="col">APELLIDOS</th>
+                <th scope="col">CARGO</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody class="bg-light">
+            {% for e in empleados %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ e.id_empleado }}</td>
+                <td>{{ e.rut_emp }}</td>
+                <td>{{ e.nombres }}</td>
+                <td>{{ e.apellidos }}</td>
+                <td>{{ e.id_cargo.descripcion }}</td>
+                <td><button onclick="abrirModalEdicion('{% url 'actualizar-empleado' e.id_usuario.id_usuario %}')" class="btn btn-dark">Actualizar</button></td>
+                <td><a href="#" onclick="eliminarEmpleado({{ e.id_usuario.id_usuario }})" class="btn btn-danger">Borrar</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="container pt-4">
+    <h2 class="pb-3">Listado de proveedores</h2>
+    <table class="table">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">ID</th>
+                <th scope="col">RUT</th>
+                <th scope="col">NOMBRE ENTIDAD</th>
+                <th scope="col">CELULAR</th>
+                <th scope="col">RUBRO</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody class="bg-light">
+            {% for p in proveedores %}
+            <tr>
+                <th scope="row">{{ forloop.counter }}</th>
+                <td>{{ p.id_proveedor }}</td>
+                <td>{{ p.rut_provee }}</td>
+                <td>{{ p.nombre }}</td>
+                <td>{{ p.celular }}</td>
+                <td>{{ p.id_rubro.descripcion }}</td>
+                <td><button onclick="abrirModalEdicion('{% url 'actualizar-proveedor' p.id_usuario.id_usuario %}')" class="btn btn-dark">Actualizar</button></td>
+                <td><a href="#" onclick="eliminarProveedor({{ p.id_usuario.id_usuario }})" class="btn btn-danger">Borrar</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+<div class="modal fade" id="edicion" role="dialog">
+
+</div>
+
+
+{% endblock %}

@@ -15,95 +15,104 @@
             document.getElementById('APE').value = 'Empresa, Campo no requerido.'
 
         }
-        else{
+        else {
             document.getElementById('divApellido').hidden = false
         }
     });
 </script>
+
+<script>
+    document.getElementById('guardar').addEventListener('click', function () {
+        document.getElementById('NOM').disabled = false;
+        document.getElementById('APE').disabled = false;
+        document.getElementById('NAC').disabled = false;
+        document.getElementById('CEL').disabled = false;
+        document.getElementById('EMA').disabled = false;
+    });
+
+</script>
+
 {% endblock %}
 
 
 {% block Contenido_cuenta %}
 
 
-<div class="navbar-brand bg-light d-flex">
-    <div class="pl-4">Datos Personales:</div>
-    <div class="ml-auto"><i class="fas fa-2x fa-pen-square text-dark" style="opacity: 0.5;"></i></div>
+<div class="container">
+    <div class="row">
+
+        <div class="navbar-brand bg-light d-flex rounded-pill col-sm-12 col-md-12 col-lg-12">
+            <div class="pl-4">Datos Personales:</div>
+            <div class="pr-4 ml-auto"><i class="fas fa-2x fa-pen-square text-dark" style="opacity: 0.5;"></i></div>
+        </div>
+
+        <div class="container p-4 col-sm-12 col-md-12 col-lg-12">
+            <form action="{% url 'actualizar-datos' %}" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Rut:</label>
+                    <div class="d-flex">
+                        <input type="text" name="rut_cliente" id="" class="form-control"
+                            value="{{ cliente.rut_cli }}" disabled required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Nombres:</label>
+                    <div class="d-flex">
+                        <input type="text" name="nombre" id="NOM" class="form-control"
+                            value="{{ cliente.nombres }}" disabled required>
+                        <a href="#" class="pl-2 col align-self-center btn btn-link" id="editar">Editar</a>
+                    </div>
+                </div>
+                <div class="form-group" id="divApellido">
+                    <label>Apellidos:</label>
+                    <div class="d-flex">
+                        <input type="text" name="apellido" id="APE" class="form-control"
+                            value="{{ cliente.apellidos }}" disabled required>
+                        <a href="#" class="pl-2 col align-self-center btn btn-link" id="editar1">Editar</a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Fecha de Nacimiento:</label>
+                    <div class="d-flex">
+                        <input type="date" name="nacimiento" id="NAC" class="form-control"
+                            value="{{cliente.nacimiento|date:'Y-m-d'}}" disabled required>
+                        <a href="#" class="pl-2 col align-self-center btn btn-link" id="editar2">Editar</a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Celular:</label>
+                    <div class="d-flex">
+                        <input type="number" name="fono" id="CEL" class="form-control"
+                            value="{{ cliente.fono }}" disabled required>
+                        <a href="#" class="pl-2 col align-self-center btn btn-link" id="editar3">Editar</a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Correo Electronico:</label>
+                    <div class="d-flex">
+                        <input type="email" name="email" id="EMA" class="form-control"
+                            value="{{ cliente.email }}" disabled required>
+                        <a href="#" class="pl-2 col align-self-center btn btn-link" id="editar4">Editar</a>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Tipo de Entidad</label>
+                    <select name="tipo_cliente" id="idtipo" class="form-control" disabled>
+                        {% if cliente.id_tipo.id_tipo == 1 %}
+                        <option value="1" selected>Natural</option>
+                        {%else%}
+                        <option value="2" selected>Empresa</option>
+                        {% endif %}
+                    </select>
+                </div>
+                <button class="btn btn-lg btn-dark btn-block" type="submit" id="guardar">Guardar Mis
+                    Cambios</button>
+            </form>
+        </div>
+
+    </div>
 </div>
-
-<div class="container p-4">
-    <form action="" method="POST">
-        {% csrf_token %}
-        <div class="form-group">
-            <label>Rut:</label>
-            <div class="d-flex">
-                <input type="text" name="rut_cliente" id="" class="form-control" value="{{ cliente.rut_cli }}" disabled>
-            </div>
-        </div>
-        <div class="form-group">
-            <label>Nombres:</label>
-            <div class="d-flex">
-                <input type="text" name="nombre" id="NOM" class="form-control" value="{{ cliente.nombres }}" disabled
-                    required>
-                <a href="#" class="pl-2 col align-self-center btn btn-link" id="editar">Editar</a>
-            </div>
-        </div>
-        <div class="form-group" id="divApellido">
-            <label>Apellidos:</label>
-            <div class="d-flex">
-                <input type="text" name="apellido" id="APE" class="form-control" value="{{ cliente.apellidos }}"
-                    disabled required>
-                <a href="#" class="pl-2 col align-self-center btn btn-link" id="editar1">Editar</a>
-            </div>
-        </div>
-        <div class="form-group">
-            <label>Fecha de Nacimiento:</label>
-            <div class="d-flex">
-                <input type="date" name="nacimiento" id="NAC" class="form-control"
-                    value="{{cliente.nacimiento|date:'Y-m-d'}}" disabled required>
-                <a href="#" class="pl-2 col align-self-center btn btn-link" id="editar2">Editar</a>
-            </div>
-        </div>
-        <div class="form-group">
-            <label>Celular:</label>
-            <div class="d-flex">
-                <input type="number" name="fono" id="CEL" class="form-control" value="{{ cliente.fono }}" disabled
-                    required>
-                <a href="#" class="pl-2 col align-self-center btn btn-link" id="editar3">Editar</a>
-            </div>
-        </div>
-        <div class="form-group">
-            <label>Correo Electronico:</label>
-            <div class="d-flex">
-                <input type="email" name="email" id="EMA" class="form-control" value="{{ cliente.email }}" disabled
-                    required>
-                <a href="#" class="pl-2 col align-self-center btn btn-link" id="editar4">Editar</a>
-            </div>
-        </div>
-        <div class="form-group">
-            <label>Tipo de Entidad</label>
-            <select name="tipo_cliente" id="idtipo" class="form-control" disabled>
-                {% if cliente.id_tipo.id_tipo == 1 %}
-                <option value="1" selected>Natural</option>
-                {%else%}
-                <option value="2" selected>Empresa</option>
-                {% endif %}
-            </select>
-        </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Guardar Mis Cambios</button>
-    </form>
-</div>
-
-
-
-
-
-
-
-
-
-
-
 
 
 {{ block.super }}

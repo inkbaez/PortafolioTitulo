@@ -5,63 +5,38 @@
 
 {% block titulo %}
 <title>Mi Cuenta</title>
+
+
 {% endblock %}
 
 {% block link %}
-<link rel="stylesheet" href="{% static 'core/css/SideBar.css' %}">
     {% block link_cuenta %}
 
     {% endblock %}
 {% endblock %}
 
 {% block javascript %}
-<script src="{% static 'core/js/sidebar.js' %}"></script>
     {% block javascript_cuenta %}
-        
+
     {% endblock %}
 {% endblock %}
 
 
 {% block Contenido %}
 
-<div class="container-fluid pl-0">
-    <div class="d-flex">
-        <div class="wrapper01">
+<ul class="nav justify-content-center bg-light container-fluid">
+    <li class="nav-item">
+      <a class="nav-link text-dark" href="{% url 'micuenta' %}"><dt>Datos Personales</dt></a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link text-dark" href="#"><dt>Solicitudes</dt></a>
+    </li>
+</ul>
 
-            <nav id="sidebar" class="bg-dark">
-
-                <div class="sidebar-header text-center">
-                    <div class="pb-2">
-                        <i class="fas fa-3x fa-user-circle"></i>
-                    </div>
-                    <h3>Mi Cuenta</h3>
-                </div>
-                <ul class="lisst-unstyled components">
-                    <p class="pb-4 text-center">Bienvenido: {{user.username}}</p>
-
-                    <li class="pt-4">
-                        <a class="text-white" href="{% url 'micuenta' %}" , "Producto" )">Datos Personales</a>
-                    </li>
-                    <li>
-                        <a class="text-white" href="#" , "Producto" )">Gestión de Compras</a>
-                    </li>
-                </ul>
-            </nav>
-            <!--toggle-->
-            <div class="p-1 rounded-circle">
-                <button type="button" id="sidebarCollapse" class="btn btn-dark">
-                    <i class="fas fa-align-left"></i>
-                </button>
-            </div>
-            <!--toggle-->
-
-            <div id="content" class="container-fluid">
-                {% block Contenido_cuenta %}
-                
-                {% endblock %}
-            </div>
-        </div>
-    </div>
+<div class="container pt-4" style="min-height: 100vh;">
+    {% block Contenido_cuenta %}
+                        
+    {% endblock %}
 </div>
 
 {% endblock %}
