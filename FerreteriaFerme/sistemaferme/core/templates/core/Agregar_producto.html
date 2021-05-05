@@ -1,0 +1,175 @@
+{% extends 'core/Base.html' %}
+
+{% load static %}
+
+{% block javascript %}
+
+<!-- <script>
+    document.getElementById('Sefamilias').addEventListener('change', function () {
+        let idfamilia = document.getElementById('Sefamilias').value;
+        let url = '/tipoProducto_por_familia/?idfamilia=' + idfamilia;
+        fetch(url)
+            .then(function (result) {
+                return result.text();
+            })
+            .then(function (result) {
+                document.getElementById('Setipo').innerHTML = result;
+            });
+    });
+</script> -->
+
+<script>
+    document.getElementById('file').onchange = function (e) {
+        let reader = new FileReader();
+        reader.readAsDataURL(e.target.files[0]);
+        reader.onload = function () {
+            let preview = document.getElementById('preview');
+            let dvQuitar = document.getElementById('dvQuitar');
+            dvQuitar.innerHTML = ''
+            dvQuitar.innerHTML += '<a type="button" class="text-danger" onclick="quitarFoto()"><i class="fas fa-trash-alt"></i></a>'
+            image = document.createElement('img');
+            image.src = reader.result;
+            image.className = 'card-img-top img-fluid';
+            image.style.width = '100%';
+            preview.innerHTML = '';
+            preview.append(image);
+
+        }
+    }
+</script>
+
+<script type="text/javascript">
+    function quitarFoto() {
+        let preview = document.getElementById('preview');
+        let dvQuitar = document.getElementById('dvQuitar');
+        let inputf = document.getElementById('file');
+        dvQuitar.innerHTML = '';
+        div = document.createElement('div');
+        div.className = 'text-center pt-4'
+        div.innerHTML = '<i class="fas fa-3x fa-upload"></i>'
+        div.innerHTML += '<p>Seleccione una imagen</p>'
+        preview.innerHTML = ''
+        inputf.value = ''
+        preview.append(div);
+    }
+</script>
+
+<script>
+    var checkbox = document.getElementById('validar');
+    checkbox.addEventListener("change", validaCheckbox, false);
+    function validaCheckbox() {
+        var checked = checkbox.checked;
+        if (checked) {
+
+            var fecha = document.getElementById('vencimiento1')
+            fecha.disabled = true;
+            vencimiento1.value = '';
+            console.log('chequeado')
+        }
+        if (!checked) {
+
+            var fecha = document.getElementById('vencimiento1')
+            fecha.disabled = false;
+        }
+    }
+</script>
+
+<script>
+    document.getElementById('guardar').addEventListener('click', function () {
+        var fecha = document.getElementById('vencimiento1')
+        fecha.disabled = false;
+        console.log('hecho')
+    });
+</script>
+
+
+{% endblock %}
+
+{% block Contenido %}
+
+<div class="container mt-4 pb-4">
+
+    <div class="navbar-brand bg-light d-flex">
+        <div class="pl-4">Nuevo Producto:</div>
+        <div class="ml-auto"><i class="fas fa-2x fa-pen-square text-dark" style="opacity: 0.5;"></i></div>
+    </div>
+
+    <form action="{% url 'agregar-producto' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="row align-items-center">
+            <div class="col-sm-12 col-md-12 col-lg-6">
+
+                <div class="card text-center mx-auto" style="max-width:500px">
+                    <div id="preview">
+                        <div class="text-center pt-4">
+                            <i class="fas fa-3x fa-upload"></i>
+                            <p>Seleccione una imagen</p>
+                        </div>
+                    </div>
+                    <div class="card-body" id="body">
+                        <div class="btn btn-dark">
+                            <label>
+                                <input type="file" id="file" name="foto" accept="image/*" style="display: none;" />
+                                Buscar
+                            </label>
+                        </div>
+                        <div id="dvQuitar" class="pt-2">
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-sm-12 col-md-12 col-lg-6">
+
+                <div>
+                    <div class="form-group">
+                        <label>Titulo:</label>
+                        <input type="text" name="descripcion" id="" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Precio:</label>
+                        <input type="text" name="precio" id="" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Stock:</label>
+                        <input type="text" name="stock" id="" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Stock Critico:</label>
+                        <input type="number" name="critico" id="" class="form-control" required>
+                    </div>
+                    <div class="form-group mb-0">
+                        <label>Fecha de vencimiento:</label>
+                        <input type="date" name="vencimiento" id="vencimiento1" class="form-control">
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="validar">
+                        <label class="form-check-label" for="validar" id="">Producto Sin Caducidad</label>
+                    </div>
+                    <div class="form-group">
+                        <label>Proveedor:</label>
+                        <select name="proveedor" id="" class="form-control">
+                            {% for p in proveedor %}
+                            <option value="{{p.id_usuario.id_usuario}}">{{p.nombre}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Categoria producto:</label>
+                        <select name="Familia" id="Sefamilias" class="form-control">
+                            {% for f in familia %}
+                            <option value="{{f.id_familia}}">{{f.descripcion}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button class="btn btn-lg btn-dark btn-block" type="submit" id="guardar">Registrar Producto</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,50 @@
+<div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Edición de Usuario</h2>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form action="{% url 'edit_proveedor' %}" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>Rut Proveedor:</label>
+                    <input type="text" name="id_usu" value="{{ proveedor.id_usuario.id_usuario }}" hidden>
+                    <input type="text" name="rut_pro" value="{{ proveedor.rut_provee }}" id="" class="form-control"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label>Nombre Entidad:</label>
+                    <input type="text" name="nombre_pro" value="{{ proveedor.nombre }}" id="" class="form-control"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label>Nombre de Usuario:</label>
+                    <input type="text" name="username_pro" id="" value="{{ usuarioOra.username }}" class="form-control"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label>Celular:</label>
+                    <input type="number" name="fono_pro" id="" value="{{ proveedor.celular }}" class="form-control"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label>Rubro:</label>
+                    <select name="rubro_pro" id="" class="form-control">
+                        <option value="{{proveedor.id_rubro}}" selected disabled>{{proveedor.id_rubro.descripcion}}
+                        </option>
+                        {% for r in rubro %}
+                        <option value="{{r.id_rubro}}">{{r.descripcion}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-dark" type="submit">Confirmar</button>
+                    <button class="btn btn-danger" type="button" data-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
