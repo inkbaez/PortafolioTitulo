@@ -31,6 +31,44 @@
 
 </script>
 
+<script>
+    function eliminarEmpleado(id){
+    Swal.fire({
+    title: '¿Estas Seguro?',
+    text: "¿Eliminar Usuario?",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#343a40',
+    cancelButtonColor: '#dc3545',
+    confirmButtonText: 'Si',
+    cancelButtonText: 'No'
+    }).then((result) => {
+    if (result.isConfirmed) {
+        window.location.href = '/eliminar_empleado/'+id+'/'
+    }
+    })
+    }
+</script>
+
+<script>
+    function eliminarProveedor(id){
+    Swal.fire({
+    title: '¿Estas Seguro?',
+    text: "¿Eliminar Usuario?",
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#343a40',
+    cancelButtonColor: '#dc3545',
+    confirmButtonText: 'Si',
+    cancelButtonText: 'No'
+    }).then((result) => {
+    if (result.isConfirmed) {
+        window.location.href = '/eliminar_proveedor/'+id+'/'
+    }
+    })
+    }
+</script>
+
 {% endblock %}
 
 
@@ -100,7 +138,7 @@
                     {% endfor %}
                 </select>
             </div>
-            <button class="btn btn-lg btn-primary btn-block" type="submit" id="guardar">Registrar</button>
+            <button class="btn btn-lg btn-dark btn-block" type="submit" id="guardar">Registrar</button>
         </form>
         <hr>
     </div>
@@ -146,7 +184,7 @@
                     {% endfor %}
                 </select>
             </div>
-            <button class="btn btn-lg btn-primary btn-block" type="submit" id="guardar">Registrar</button>
+            <button class="btn btn-lg btn-dark btn-block" type="submit" id="guardar">Registrar</button>
         </form>
         <hr>
     </div>
@@ -177,8 +215,8 @@
                 <td>{{ e.nombres }}</td>
                 <td>{{ e.apellidos }}</td>
                 <td>{{ e.id_cargo.descripcion }}</td>
-                <td><button onclick="abrirModalEdicion('{% url 'actualizar-empleado' e.id_empleado %}')" class="btn btn-dark">Actualizar</button></td>
-                <td><a href="#" class="btn btn-danger">Borrar</a></td>
+                <td><button onclick="abrirModalEdicion('{% url 'actualizar-empleado' e.id_usuario.id_usuario %}')" class="btn btn-dark">Actualizar</button></td>
+                <td><a href="#" onclick="eliminarEmpleado({{ e.id_usuario.id_usuario }})" class="btn btn-danger">Borrar</a></td>
             </tr>
             {% endfor %}
         </tbody>
@@ -209,8 +247,8 @@
                 <td>{{ p.nombre }}</td>
                 <td>{{ p.celular }}</td>
                 <td>{{ p.id_rubro.descripcion }}</td>
-                <td><a href="#" class="btn btn-dark">Actualizar</a></td>
-                <td><a href="#" class="btn btn-danger">Borrar</a></td>
+                <td><button onclick="abrirModalEdicion('{% url 'actualizar-proveedor' p.id_usuario.id_usuario %}')" class="btn btn-dark">Actualizar</button></td>
+                <td><a href="#" onclick="eliminarProveedor({{ p.id_usuario.id_usuario }})" class="btn btn-danger">Borrar</a></td>
             </tr>
             {% endfor %}
         </tbody>

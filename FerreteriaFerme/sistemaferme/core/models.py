@@ -8,6 +8,7 @@
 from django.db import models
 
 
+
 class Boleta(models.Model):
     id_boleta = models.BigIntegerField(primary_key=True)
     fecha_ingreso = models.DateField()
@@ -158,7 +159,7 @@ class Factura(models.Model):
 
 class FamiliaProd(models.Model):
     id_familia = models.BigIntegerField(primary_key=True)
-    descripcion = models.CharField(max_length=20)
+    descripcion = models.CharField(max_length=50)
 
     class Meta:
         managed = False
@@ -167,8 +168,8 @@ class FamiliaProd(models.Model):
 
 class FotoProd(models.Model):
     id_foto = models.BigIntegerField(primary_key=True)
-    foto = models.BinaryField(blank=True, null=True)
     id_producto = models.ForeignKey('Producto', models.DO_NOTHING, db_column='id_producto', blank=True, null=True)
+    foto = models.ImageField(upload_to='Productos/', blank=True, null=True)
 
     class Meta:
         managed = False
@@ -199,7 +200,7 @@ class OrdenCompra(models.Model):
 class Producto(models.Model):
     id_producto = models.BigIntegerField(primary_key=True)
     descripcion = models.CharField(max_length=200)
-    vencimiento = models.DateField()
+    vencimiento = models.CharField(max_length=20, null=False, blank=False)
     precio = models.BigIntegerField()
     stock = models.BigIntegerField()
     stock_critico = models.BigIntegerField()

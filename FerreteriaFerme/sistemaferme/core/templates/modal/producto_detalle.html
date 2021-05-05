@@ -1,0 +1,32 @@
+<div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Producto ID: {{producto.id_producto}}</h2>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="">
+                <div class="img-wrap d-flex justify-content-center">
+                    <img class="img-fluid" src="https://res.cloudinary.com/djxgsv3yo/image/upload/{{foto.foto}}">
+                </div>
+                <div class="text-center">
+                    <hr>
+                    <h3>{{producto.descripcion}}</h3>
+                    <hr>
+                    <p>Precio: ${{producto.precio}}</p>
+                    <p>Stock {{producto.stock}} unidades</p>
+                    <hr>
+                    {%  if request.user.is_authenticated  %}
+                    {% ifequal user.groups.all.0.name "ClienteGrupo" %}
+                    <a type="button" href="#" class="btn btn-dark">Agregar Al Carrito</a>
+                    {% endifequal %}
+                    {%  endif  %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

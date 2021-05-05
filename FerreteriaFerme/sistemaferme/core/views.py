@@ -6,12 +6,26 @@ import re
 import datetime
 from django.contrib import messages
 from datetime import datetime
-from core.models import *
+from .models import *
+import cloudinary.uploader
+
 
 # Create your views here.
 
 
 def home(request):
+    if Group.objects.filter(name='ClienteGrupo').count() < 1:
+       Group.objects.create(name='ClienteGrupo')
+
+    if Group.objects.filter(name='EmpleadoGrupo').count() < 1:
+       Group.objects.create(name='EmpleadoGrupo')
+
+    if Group.objects.filter(name='ProveedorGrupo').count() < 1:
+       Group.objects.create(name='ProveedorGrupo')
+
+    if Group.objects.filter(name='SuperUsuarioGrupo').count() < 1:
+       Group.objects.create(name='SuperUsuarioGrupo')
+
     return render(request, 'core/Home.html')
 
 
@@ -207,13 +221,18 @@ def agregar_empleado(request):
     try:
         salida = sp_agregar_empleado(
             usernamee, rut, nombres, apellidos, cargo)
-        print('=================creado tabla proveedor')
+        print('=================creado tabla empleado')
         user = User.objects.create_user(
             username=usernamee, email=email, password=password2)
         print('=================creado tabla user django')
-        groupEmp = Group.objects.get(name='EmpleadoGrupo')
-        user.groups.add(groupEmp)
-        print('=================grupo asignado user django')
+        if cargo == '3':
+            groupAdm = Group.objects.get(name='SuperUsuarioGrupo')
+            user.groups.add(groupAdm)
+            print('=================grupo asignado user django como SuperUsuarioGrupo')
+        else:
+            groupEmp = Group.objects.get(name='EmpleadoGrupo')
+            user.groups.add(groupEmp)
+            print('=================grupo asignado user django')
 
         if salida == 1:
             messages.success(request, "Registrado Correctamente")
@@ -224,6 +243,95 @@ def agregar_empleado(request):
     except:
         messages.error(request, "Error Al registrar al Usuario")
     return redirect('nuevo-usuario')
+
+
+
+def actualizar_empleado(request):
+    if request.method == 'POST':
+        id_usu = request.POST['id_usu']
+        rut = request.POST['rut_emp']
+        nombres = request.POST['nombres_emp']
+        apellidos = request.POST['apellidos_emp']
+        cargo = request.POST['cargo_emp']
+        usernamee = request.POST['username_emp']
+    try:
+        Empleado.objects.filter(id_usuario=id_usu).update(rut_emp=rut, nombres=nombres, apellidos=apellidos, id_cargo=cargo)
+        userOra = Usuario.objects.get(id_usuario=id_usu)
+        userDJ = User.objects.get(username=userOra.username)
+        userDJ.groups.clear()
+        User.objects.filter(username=userOra.username).update(username=usernamee)
+        Usuario.objects.filter(id_usuario=id_usu).update(username=usernamee)
+        if cargo == '3':
+            groupAdm = Group.objects.get(name='SuperUsuarioGrupo')
+            userDJ.groups.add(groupAdm)
+            print('=================grupo asignado user django como SuperUsuarioGrupo')
+        else:
+            groupEmp = Group.objects.get(name='EmpleadoGrupo')
+            userDJ.groups.add(groupEmp)
+            print('=================grupo asignado user django')
+        
+        messages.success(request, "Actualizado Correctamente")
+        return redirect('nuevo-usuario')    
+    except:
+        messages.error(request, "Error Al Actualizar Usuario")
+        return redirect('nuevo-usuario')
+    return redirect('nuevo-usuario')
+
+
+
+def actualizar_proveedor(request):
+    if request.method == 'POST':
+        id_usu = request.POST['id_usu']
+        rut = request.POST['rut_pro']
+        nombre = request.POST['nombre_pro']
+        celular = request.POST['fono_pro']
+        rubro = request.POST['rubro_pro']
+        usernamee = request.POST['username_pro']
+    try:
+        Proveedor.objects.filter(id_usuario=id_usu).update(rut_provee=rut, nombre=nombre, celular=celular, id_rubro=rubro)
+        userOra = Usuario.objects.get(id_usuario=id_usu)
+        #userDJ = User.objects.get(username=userOra.username)
+        #userDJ.groups.clear()
+        User.objects.filter(username=userOra.username).update(username=usernamee)
+        Usuario.objects.filter(id_usuario=id_usu).update(username=usernamee)
+        
+        messages.success(request, "Actualizado Correctamente")
+        return redirect('nuevo-usuario')    
+    except:
+        messages.error(request, "Error Al Actualizar Usuario")
+        return redirect('nuevo-usuario')
+    return redirect('nuevo-usuario')
+
+def eliminar_empleado(request, id):
+
+    try:
+        Empleado.objects.filter(id_usuario=id).delete()
+        UserOra = Usuario.objects.get(id_usuario=id)
+        User.objects.filter(username=UserOra.username).delete()
+        Usuario.objects.filter(id_usuario=id).delete()
+
+        messages.success(request, 'Usuario Eliminado Correctamente')
+    except:
+        messages.error(request, 'Error Al Eliminar Usuario')
+
+    return redirect('nuevo-usuario')
+
+def eliminar_proveedor(request, id):
+
+    try:
+        Proveedor.objects.filter(id_usuario=id).delete()
+        UserOra = Usuario.objects.get(id_usuario=id)
+        User.objects.filter(username=UserOra.username).delete()
+        Usuario.objects.filter(id_usuario=id).delete()
+
+        messages.success(request, 'Usuario Eliminado Correctamente')
+    except:
+        messages.error(request, 'Error Al Eliminar Usuario')
+
+    return redirect('nuevo-usuario')
+
+
+
 
 def sp_agregar_proveedor(username, rut, nombre, fono, rubro):
     django_cursor = connection.cursor()
@@ -243,30 +351,167 @@ def sp_agregar_empleado(username, rut, nombres, apellidos, cargo):
 
 def mostrar_actualizar_empleado(request, id):
     
-    empleado = Empleado.objects.get(id_empleado=id)
+    empleado = Empleado.objects.get(id_usuario=id)
+    usuarioOra = Usuario.objects.get(id_usuario=id)
     cargo = Cargo.objects.all()
-
     data = {
         'empleado':empleado,
-        'cargo':cargo
+        'cargo':cargo,
+        'usuarioOra':usuarioOra
     }
 
-    return render(request, 'modal/actualizar_usuario.html', data)
+    return render(request, 'modal/actualizar_empleado.html', data)
 
+def mostrar_actualizar_proveedor(request, id):
+    
+    proveedor = Proveedor.objects.get(id_usuario=id)
+    usuarioOra = Usuario.objects.get(id_usuario=id)
+    rubro = Rubro.objects.all()
+    data = {
+        'proveedor':proveedor,
+        'rubro':rubro,
+        'usuarioOra':usuarioOra
+    }
 
-
+    return render(request, 'modal/actualizar_proveedor.html', data)
 
 
 
 def mostrar_agregar_producto(request):
     familia = FamiliaProd.objects.all()
-    tipo = TipoProd.objects.all()
     proveedor = Proveedor.objects.all()
 
     data = {
         'familia': familia,
-        'tipo': tipo,
-        'proveedor':proveedor
+        'proveedor':proveedor,
+        'productos':listado_productos()
     }
 
     return render(request, 'core/Agregar_producto.html', data)
+
+def tipo_producto_por_familia(request):
+    idfamilia = request.GET.get('idfamilia')
+    data = {
+        'tipoProdcuto':listar_tipo_producto_por_familia(idfamilia)
+    }
+
+    return render(request, 'combobox/tipo_x_familia.html', data)
+
+def listar_tipo_producto_por_familia(id_familia):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    out_cur = django_cursor.connection.cursor()
+
+    cursor.callproc("SP_LISTAR_TIPOPRODUCTO_POR_FAMILIA", [out_cur, id_familia])
+
+    lista = []
+    for fila in out_cur:
+        lista.append(fila)
+    
+    return lista
+
+def agregar_producto(request):
+    if request.method == 'POST':
+        descripcion = request.POST['descripcion']
+        precio = request.POST['precio']
+        stock = request.POST['stock']
+        critico = request.POST['critico']
+        vencimiento = change_date_format(request.POST['vencimiento'])
+        proveedor = request.POST['proveedor']
+        Familia = request.POST['Familia']
+        foto_ = request.FILES.get('foto')
+        
+    try:
+        new_id = int(sp_obtener_id_producto(proveedor, Familia, vencimiento))
+        salida = sp_crear_producto(new_id, descripcion, vencimiento, precio, stock, critico, proveedor, Familia)
+        foto_id = int(sp_obtener_id_foto_prod())
+        FotoProd.objects.create(id_foto=foto_id, foto=foto_)
+        FotoProd.objects.filter(id_foto=foto_id).update(id_producto=new_id)
+        
+        messages.success(request, 'Producto Registrado Correctamente')
+    except:
+        messages.error(request, 'Error, Al Registrar Prodcuto')
+
+    return redirect('nuevo-producto')
+
+
+def sp_crear_producto(id_producto, descripcion, vencimiento, precio, stock, stock_critico, id_proveedor, id_familia):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+    cursor.callproc('SP_CREATE_PRODUCTO', [
+                    id_producto, descripcion, vencimiento, precio, stock, stock_critico, id_proveedor, id_familia, salida])
+    return salida.getvalue()
+
+
+def sp_agregar_foto_producto(id_proveedor, foto):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+    cursor.callproc('SP_CREATE_FOTO_PRODUCTO', [
+                    id_proveedor, foto, salida])
+    return salida.getvalue()
+
+def sp_obtener_id_producto(id_proveedor, id_familia, vencimiento):
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.STRING)
+    cursor.callproc('SP_OBTENER_ID_PRODUCTO', [
+                    id_proveedor, id_familia, vencimiento, salida])
+    return salida.getvalue()
+
+def sp_obtener_id_foto_prod():
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    salida = cursor.var(cx_Oracle.NUMBER)
+    cursor.callproc('SP_OBTENER_ID_FOTO_PROD', [salida])
+    return salida.getvalue()
+
+def mostrar_productos(request):
+
+    data = {
+        'productos':listado_productos()
+    }
+
+    return render(request, 'core/Productos.html', data)
+    
+def listado_productos():
+    django_cursor = connection.cursor()
+    cursor = django_cursor.connection.cursor()
+    out_cur = django_cursor.connection.cursor()
+
+    cursor.callproc("SP_LISTAR_PRODUCTOS", [out_cur])
+
+    lista = []
+    for fila in out_cur:
+        lista.append(fila)
+    
+    return lista
+
+def mostrar_detalle_producto(request, id):
+    
+    producto = Producto.objects.get(id_producto=id)
+    foto = FotoProd.objects.get(id_producto=id)
+    
+    data = {
+        'producto':producto,
+        'foto':foto
+    }
+
+    return render(request, 'modal/producto_detalle.html', data)
+
+def mostrar_actualizar_producto(request, id):
+    
+    producto = Producto.objects.get(id_producto=id)
+    foto = FotoProd.objects.get(id_producto=id)
+    proveedor = Proveedor.objects.all()
+    familia = FamiliaProd.objects.all()
+
+    data = {
+        'producto':producto,
+        'foto':foto,
+        'proveedor':proveedor,
+        'familia': familia
+    }
+
+    return render(request, 'modal/actualizar_producto.html', data)

@@ -1,0 +1,170 @@
+<div class="container pt-4">
+
+
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Actualizar producto: {{producto.id_producto}}</h2>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="row align-items-center">
+                        <div class="col-sm-12 col-md-12 col-lg-6">
+
+                            <div class="card text-center mx-auto" style="max-width:500px">
+                                <div id="preview">
+                                    {% if foto.foto %}
+                                    <img src="https://res.cloudinary.com/djxgsv3yo/image/upload/{{foto.foto}}"
+                                        class="card-img-top img-fluid" style="width: 100%;" alt="">
+                                    {% else %}
+                                    <div class="text-center pt-4">
+                                        <i class="fas fa-3x fa-upload"></i>
+                                        <p>Seleccione una imagen</p>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="card-body" id="body">
+                                    <div class="btn btn-dark">
+                                        <label>
+                                            <input type="file" id="file" name="foto" accept="image/*"
+                                                style="display: none;" />
+                                            Buscar
+                                        </label>
+                                    </div>
+                                    <div id="dvQuitar" class="pt-2">
+                                        <a type="button" class="text-danger" onclick="quitarFoto()"><i class="fas fa-trash-alt"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="col-sm-12 col-md-12 col-lg-6">
+
+                            <div>
+                                <div class="form-group">
+                                    <label>Titulo:</label>
+                                    <input type="text" name="descripcion" value="{{producto.descripcion}}" id=""
+                                        class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Precio:</label>
+                                    <input type="text" name="precio" id="" value="{{producto.precio}}"
+                                        class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Stock:</label>
+                                    <input type="text" name="stock" id="" value="{{producto.stock}}"
+                                        class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Stock Critico:</label>
+                                    <input type="number" name="critico" id="" value="{{producto.stock_critico}}"
+                                        class="form-control" required>
+                                </div>
+                                <div class="form-group mb-0">
+                                    <label>Fecha de vencimiento:</label>
+                                    <input type="date" name="vencimiento" id="vencimiento1"
+                                        value="{{producto.vencimiento}}" class="form-control">
+                                </div>
+                                <div class="form-check">
+                                    <input type="checkbox" class="form-check-input" id="validar">
+                                    <label class="form-check-label" for="validar" id="">Producto Sin Caducidad</label>
+                                </div>
+                                <div class="form-group">
+                                    <label>Proveedor:</label>
+                                    <select name="proveedor" id="" class="form-control">
+                                        {% for p in proveedor %}
+                                        <option value="{{p.id_usuario.id_usuario}}">{{p.nombre}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Categoria producto:</label>
+                                    <select name="Familia" id="Sefamilias" class="form-control">
+                                        {% for f in familia %}
+                                        <option value="{{f.id_familia}}">{{f.descripcion}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <button class="btn btn-lg btn-dark btn-block" type="submit" id="guardar">Actualizar
+                                    Producto</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    document.getElementById('file').onchange = function (e) {
+        let reader = new FileReader();
+        reader.readAsDataURL(e.target.files[0]);
+        reader.onload = function () {
+            let preview = document.getElementById('preview');
+            let dvQuitar = document.getElementById('dvQuitar');
+            dvQuitar.innerHTML = ''
+            dvQuitar.innerHTML += '<a type="button" class="text-danger" onclick="quitarFoto()"><i class="fas fa-trash-alt"></i></a>'
+            image = document.createElement('img');
+            image.src = reader.result;
+            image.className = 'card-img-top img-fluid';
+            image.style.width = '100%';
+            preview.innerHTML = '';
+            preview.append(image);
+
+        }
+    }
+</script>
+
+<script type="text/javascript">
+    function quitarFoto() {
+        let preview = document.getElementById('preview');
+        let dvQuitar = document.getElementById('dvQuitar');
+        let inputf = document.getElementById('file');
+        dvQuitar.innerHTML = '';
+        div = document.createElement('div');
+        div.className = 'text-center pt-4'
+        div.innerHTML = '<i class="fas fa-3x fa-upload"></i>'
+        div.innerHTML += '<p>Seleccione una imagen</p>'
+        preview.innerHTML = ''
+        inputf.value = ''
+        preview.append(div);
+    }
+</script>
+
+<script>
+    var checkbox = document.getElementById('validar');
+    checkbox.addEventListener("change", validaCheckbox, false);
+    function validaCheckbox() {
+        var checked = checkbox.checked;
+        if (checked) {
+
+            var fecha = document.getElementById('vencimiento1')
+            fecha.disabled = true;
+            vencimiento1.value = '';
+            console.log('chequeado')
+        }
+        if (!checked) {
+
+            var fecha = document.getElementById('vencimiento1')
+            fecha.disabled = false;
+        }
+    }
+</script>
+
+<script>
+    document.getElementById('guardar').addEventListener('click', function () {
+        var fecha = document.getElementById('vencimiento1')
+        fecha.disabled = false;
+        console.log('hecho')
+    });
+</script>

@@ -8,10 +8,11 @@
         </div>
         <div class="modal-body">
 
-            <form action="" method="POST">
+            <form action="{% url 'edit_empleado' %}" method="POST">
                 {% csrf_token %}
                 <div class="form-group">
                     <label>Rut Empleado:</label>
+                    <input type="text" name="id_usu" value="{{ empleado.id_usuario.id_usuario }}" hidden>
                     <input type="text" name="rut_emp" id="" value="{{ empleado.rut_emp }}" class="form-control" required>
                 </div>
                 <div class="form-group">
@@ -23,19 +24,25 @@
                     <input type="text" name="apellidos_emp" id="" value="{{ empleado.apellidos }}" class="form-control" required>
                 </div>
                 <div class="form-group">
+                    <label>Nombre de Usuario:</label>
+                    <input type="text" value="{{ usuarioOra.username }}" name="username_emp" id="" class="form-control" required>
+                </div>
+                <div class="form-group">
                     <label>Cargo:</label>
-                    <select name="cargo_emp" id="" class="form-control">
+                    <select name="cargo_emp" id="selectCargo" class="form-control">
                         <option value="{{empleado.id_cargo}}" selected disabled>{{empleado.id_cargo.descripcion}}</option>
                         {% for c in cargo %}
                         <option value="{{c.id_cargo}}">{{c.descripcion}}</option>
                         {% endfor %}
                     </select>
                 </div>
+                <div class="modal-footer">
+                    <button class="btn btn-dark" type="submit" id="guardar">Confirmar</button>
+                    <button class="btn btn-danger" type="button" data-dismiss="modal">Cancelar</button>
+                </div>
             </form>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-dark" type="submit">Confirmar</button>
-            <button class="btn btn-danger" type="button" data-dismiss="modal">Cancelar</button>
         </div>
     </div>
 </div>
+
+

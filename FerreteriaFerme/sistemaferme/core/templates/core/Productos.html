@@ -1,0 +1,74 @@
+{% extends 'core/Base.html' %}
+
+{% load static %}
+
+{% block javascript %}
+
+<script type="text/javascript">
+    var $ = jQuery.noConflict();
+    function abrirModalDetalle(url){
+        $('#detalle').load(url, function (){
+            $(this).modal('show');
+        });
+    }
+
+
+</script>
+
+
+{% endblock %}
+
+{% block Contenido %}
+
+<div class="container p-4">
+    <div class="navbar-brand bg-light d-flex rounded-pill">
+        <div class="pl-4">Productos:</div>
+        <div class="pr-4 ml-auto"><i class="fas fa-shopping-bag text-dark" style="opacity: 0.5;"></i></div>
+    </div>
+
+    <div class="row pt-3">
+        {% for p in productos %}
+        <div class="col-md-4">
+            <figure class="card bg-light">
+                <a href="#" onclick="abrirModalDetalle('{% url 'detalle-producto' p.0 %}')">
+                    <div class="img-wrap"><img class="img-fluid"
+                            src="https://res.cloudinary.com/djxgsv3yo/image/upload/{{ p.11 }}">
+                    </div>
+                </a>
+                <figcaption class="text-center">
+                    <h4 class="pb-3" style="width:100%; text-overflow: ellipsis; overflow:hidden; white-space: nowrap;">
+                        {{ p.1 }}
+                    </h4>
+                    <div class="pt-4">
+                        <div class="label-rating">Precio: ${{ p.3 }}</div>
+                        <div class="label-rating">Stock: {{ p.4 }} unidades</div>
+                    </div>
+                </figcaption>
+                <div class="d-flex justify-content-center pt-2">
+                    {%  if request.user.is_authenticated  %}
+                    {% ifequal user.groups.all.0.name "ClienteGrupo" %}
+                    <a href="" class="btn btn-sm btn-dark float-right">Agregar Al Carrito</a>
+                    {% endifequal %}
+                    {% ifequal user.groups.all.0.name "EmpleadoGrupo" %}
+                    <a href="#" onclick="abrirModalDetalle('{% url 'actualizar-producto' p.0 %}')" class="btn btn-sm btn-dark float-right mr-3">Actualizar</a>
+                    <a href="#" class="btn btn-sm btn-danger float-right ml-3">Borrar</a>
+                    {% endifequal %}
+                    {%  endif  %}
+                </div>
+            </figure>
+        </div>
+        <!--COL-->
+        {% endfor %}
+
+    </div>
+    <!--ROW-->
+
+
+    <div class="modal fade" id="detalle" role="dialog">
+
+    </div>
+
+
+
+</div>
+{% endblock %}

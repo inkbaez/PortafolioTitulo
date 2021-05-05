@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'cloudinary_storage',
+    'cloudinary',
     'core',
 ]
 
@@ -81,7 +83,7 @@ WSGI_APPLICATION = 'sistemaferme.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.oracle',
-        'NAME': '192.168.1.25:1521/xe',
+        'NAME': '192.168.1.26:1521/xe',
         'USER': 'c##FerreteriaFerme',
         'PASSWORD': 'FERME',
         'TEST': {
@@ -130,6 +132,17 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'djxgsv3yo',
+    'API_KEY': '674235549321946',
+    'API_SECRET': '9defYz37_k5Z9HQzYgcJ5S-9z7E'
+}
+
+
+
+MEDIA_URL = '/FerreteriaFerme/'  # or any prefix you choose
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
